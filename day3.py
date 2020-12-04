@@ -1,4 +1,4 @@
-forest = open('day3_input.txt', "r").read().split('\n')
+forest = open('input/day3_input.txt', "r").read().split('\n')
 
 height = len(forest)-1
 width = len(forest[1])

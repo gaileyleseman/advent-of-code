@@ -1,4 +1,4 @@
-forest = open('day3_input.txt', "r").read().split('\n')
+forest = open('input/day3_input.txt', "r").read().split('\n')
 down = [1, 1, 1, 1, 2]
 right = [1, 3, 5, 7, 1]
 

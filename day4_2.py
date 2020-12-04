@@ -1,6 +1,6 @@
 import re
 
-passports = open('day4_input_thyco.txt', "r").read().split('\n\n')
+passports = open('input/day4_input.txt', "r").read().split('\n\n')
 req_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 ecl_options = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 

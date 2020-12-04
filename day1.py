@@ -1,4 +1,4 @@
-data = open('day1_input.txt', "r").read().split('\n')
+data = open('input/day1_input.txt', "r").read().split('\n')
 
 for i in range(0, len(data)-1):
     data[i] = int(data[i])
