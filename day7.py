@@ -46,4 +46,16 @@ ans = findNumBags(my_color, my_number)
 print("Bags that can contain at least {0} {1} bag: {2}".format(my_number, my_color, ans))
 
 
+# Part 2 -----------------------------------------------------------------------#
 
+def findInnerBags(my_color):
+    total = 1
+    for color, number in rules[my_color].items():
+        if number == 0:
+            continue
+        total += number * findInnerBags(color)
+        print(color, number)
+    return total
+
+ans_pt2 = findInnerBags(my_color)-1
+print("{0} {1} bag must contain at least: {2} bags".format(my_number, my_color, ans_pt2))
