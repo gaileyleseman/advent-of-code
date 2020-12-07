@@ -54,8 +54,7 @@ def findInnerBags(my_color):
         if number == 0:
             continue
         total += number * findInnerBags(color)
-        print(color, number)
     return total
 
-ans_pt2 = findInnerBags(my_color)-1
+ans_pt2 = findInnerBags(my_color) - 1
 print("{0} {1} bag must contain at least: {2} bags".format(my_number, my_color, ans_pt2))
