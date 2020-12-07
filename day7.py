@@ -35,7 +35,7 @@ def findNumBags(my_color, my_number):
             continue
         else:
             outer_bag_options = findPossibleBags(bag, 1)
-            if len(outer_bag_options) > 1:
+            if len(outer_bag_options) >= 1:
                 possible_bags.extend(outer_bag_options)
             checked_colors.append(bag)
     return len(set(possible_bags))
