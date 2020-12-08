@@ -10,7 +10,7 @@ def download_input(year, day):
     page = requests.get(url, allow_redirects=True, cookies=headers)
     open(filename, 'w').write(page.text)
 
-download_input(2020,4)
+download_input(2020,8)
 
 
 
