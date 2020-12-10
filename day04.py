@@ -1,15 +1,26 @@
 import re
-
 passports = open('input/day4_input.txt', "r").read().split('\n\n')
-req_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
-ecl_options = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 
+# Part 1 -----------------------------------------------------#
+req_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
+not_valid = 0
+
+for passport in passports:
+    for field in req_fields:
+        if passport.find(field) < 0:
+            not_valid += 1
+            break
+
+valid = len(passports) - not_valid
+print("Part 1: ", valid)
+
+# Part 2 -----------------------------------------------------#
+ecl_options = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 
 def check_fields(passport, req_fields):
     for req_field in req_fields:
         if passport.find(req_field) < 0:
             return True    # required field missing
-
 
 def check_field_validity(field):
     code = field[0:3]  # three letter code
@@ -54,10 +65,8 @@ for passport in passports:
         fields = re.split('\n| ', passport)  # split passport fields
         for field in fields:
             if not check_field_validity(field):  # check validity
-                print(' || Field not valid: ', field)
+                # print(' || Field not valid: ', field)
                 break
         else:
             valid += 1
-
-
-print(valid)
+print("Part 2: ", valid)
