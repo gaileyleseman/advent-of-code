@@ -1,7 +1,7 @@
 import numpy as np
 import math
 actions = open('./input/day12_input.txt', 'r').read().splitlines()
-#actions = open('./input/day12_test.txt', 'r').read().splitlines()
+# actions = open('./input/day12_test.txt', 'r').read().splitlines()
 
 # Part 1 ----------------------------------------------------------#
 navigation = {"N": np.array([1, 0, 0]),
@@ -47,14 +47,9 @@ def move_waypoint(pos_ship, pos_wp, action):
     if cmd in wp_nav:
         new_pos = pos_wp + wp_nav[cmd] * value
     else:
-        diff = pos_wp - pos_ship
-        l = math.sqrt(diff[0]**2 + diff[1]**2)
-        if diff[0] == 0:
-            current_angle = 0 if diff[1] > 0 else math.pi
-        elif diff[1] == 0:
-            current_angle = 0.5*math.pi if diff[0] > 0 else -0.5*math.pi
-        else:
-            current_angle = math.atan(diff[0]/diff[1])
+        diff_n, diff_e = pos_wp - pos_ship
+        l = math.sqrt(diff_n**2 + diff_e**2)
+        current_angle = np.arctan2(diff_n, diff_e)
         if cmd == "L":
             angle = current_angle + math.radians(value)
         else:
