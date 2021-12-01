@@ -9,7 +9,8 @@ def main():
     parser.add_argument('--year', '-y', help="enter the event year", type=str, default='2021')
     parser.add_argument('--day', '-d', help="enter the event day", type=str)
     parser.add_argument('--redo', '-r', help="set to True to download the input again", type=bool, default=False)
-    parser.add_argument('-language', '-l', help="set the boilerplate language", type=str, default='python')
+    parser.add_argument('-language', '-l', help="set the boilerplate language", type=str,
+                        choices=['py', 'kt', 'cpp'], default='py')    #TODO: create boilerplate for Kotlin and C++
     args = parser.parse_args()
 
     session = requests.Session()
@@ -30,7 +31,7 @@ def main():
             f.write(page.text.rstrip())
 
     solution_path = path + "day{0}.py".format(args.day.zfill(2))
-    boilerplate_path = "boilerplate/{0}_boilerplate.py".format(args.language)
+    boilerplate_path = "boilerplate/boilerplate.{0}".format(args.language)
 
     if not os.path.isfile(solution_path):  # create a boilerplate
         with open(boilerplate_path, 'r') as boilerplate, open(solution_path, 'a') as solution:
