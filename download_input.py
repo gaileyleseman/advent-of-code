@@ -1,14 +1,15 @@
-import sys
 import argparse
 import requests
 import os
 import cookie_jar
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--year', '-y', help="enter the event year", type=str, default='2021')
     parser.add_argument('--day', '-d', help="enter the event day", type=str)
-    parser.add_argument('--redo', '-r', type=bool, default=False)
+    parser.add_argument('--redo', '-r', help="set to True to download the input again", type=bool, default=False)
+    parser.add_argument('-language', '-l', help="set the boilerplate language", type=str, default='python')
     args = parser.parse_args()
 
     session = requests.Session()
@@ -29,7 +30,7 @@ def main():
             f.write(page.text.rstrip())
 
     solution_path = path + "day{0}.py".format(args.day.zfill(2))
-    boilerplate_path = "./python_boilerplate.py"
+    boilerplate_path = "boilerplate/{0}_boilerplate.py".format(args.language)
 
     if not os.path.isfile(solution_path):  # create a boilerplate
         with open(boilerplate_path, 'r') as boilerplate, open(solution_path, 'a') as solution:
@@ -40,6 +41,7 @@ def main():
         pass
 
     print("Ready for 'Advent of Code | {0} | Day {1}'!".format(args.year, args.day))
+
 
 if __name__ == '__main__':
     main()
