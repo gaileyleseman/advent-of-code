@@ -1,8 +1,6 @@
 # ignore test files
-**/*[Tt]est*
-/*config*
 /.idea*
-/*dld_input*
+cookie_jar.py
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,windows,linux
