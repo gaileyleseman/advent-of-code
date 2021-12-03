@@ -21,10 +21,7 @@ def find_most_and_least_common_bit(data):
     for row in data:
         ones = sum(row)
         zeroes = len(row) - ones
-        if ones > zeroes:  # most common bit is 1
-            most_common += "1"
-            least_common += "0"
-        elif ones == zeroes:
+        if ones >= zeroes:  # most common bit is 1
             most_common += "1"
             least_common += "0"
         else:  # most common bit is 0
