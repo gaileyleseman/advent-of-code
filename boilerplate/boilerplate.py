@@ -1,16 +1,16 @@
-
-
 def parse_text(input_txt):
     data = open(input_txt, "r").read().split('\n')
     return data
 
+
 def part1(input_txt):
     data = parse_text(input_txt)
-    pass
+    return 0
+
 
 def part2(input_txt):
     data = parse_text(input_txt)
-    pass
+    return 0
 
 
 if __name__ == '__main__':
