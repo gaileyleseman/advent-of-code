@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def parse_text(input_txt):
     lines = [x.split(" | ") for x in open(input_txt, "r").read().split('\n')]
     data = lines
@@ -44,10 +41,12 @@ def find_digits_map(line):
                 digits_map[6] = "".join(sorted(i))
     return dict([(value, key) for key, value in digits_map.items()])
 
+
 def map_digits(digits_map, line):
     letters = ["".join(sorted(l)) for l in line.split()]
     digits = int("".join([str(digits_map[l]) for l in letters]))
     return digits
+
 
 def part1(input_txt):
     data = parse_text(input_txt)
