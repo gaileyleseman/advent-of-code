@@ -37,7 +37,6 @@ def part2(data):
     stacks = [stack.copy() for stack in original_stacks]
 
     for line in instructions:
-        old = [stack.copy() for stack in stacks]
         n = line[0]
         original = line[1]-1
         new = line[2]-1
