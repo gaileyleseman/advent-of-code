@@ -3,44 +3,41 @@ import time
 def parse_text(input_txt):
     template, raw_data = open(input_txt, "r").read().split('\n\n')
     data = [line.split(" -> ") for line in raw_data.split("\n")]
-    return template, data
+    rules = {i[0]:i[1] for i in data}
+    return template, rules
 
 
-polymer_letters = ["B", "C", "N", "H"]
+def update_polymer(polymer, rules):
+    new_polymer = ""
+    for i in range(len(polymer) - 1):
+        check = polymer[i:i + 2]
+        next_check = polymer[i+1:i + 3]
 
-def insert(polymer, to_insert):
-    k = 0
-    for i, c in to_insert:
-        polymer = polymer[:i+k] + c + polymer[i+k:]
-        k += 1
-    return polymer
-
-
-def update_polymer(polymer, rules, steps):
-    for k in range(steps):
-        to_insert = []
-        for i in range(len(polymer) - 1):
-            check = polymer[i:i + 2]
-            for pair, element in rules:
-                if check == pair:
-                    to_insert.append([i+1, element])
-        polymer = insert(polymer, to_insert)
-    return polymer
-
+        new_polymer += polymer[i]
+        if check not in rules:
+            continue
+        new_polymer += rules[check]
+        if next_check not in rules:
+            new_polymer += polymer[i+1]
+    return new_polymer
+    
 
 def part1(input_txt):
     polymer, rules = parse_text(input_txt)
-    steps = 40
-    t = time.time()
-    polymer = update_polymer(polymer, rules, steps)
-    print(time.time() - t)
-    count = [polymer.count(L) for L in polymer_letters]
+    steps = 10
+    for k in range(steps):
+        polymer = update_polymer(polymer, rules)
+    count = [polymer.count(L) for L in set(polymer)]
     return max(count) - min(count)
 
 
 def part2(input_txt):
-    data = parse_text(input_txt)
-    return 0
+    polymer, rules = parse_text(input_txt)
+    steps = 40
+    for k in range(steps):
+        polymer = update_polymer(polymer, rules)
+    count = [polymer.count(L) for L in set(polymer)]
+    return max(count) - min(count)
 
 
 if __name__ == '__main__':
