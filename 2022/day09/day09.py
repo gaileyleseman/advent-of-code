@@ -33,8 +33,8 @@ def part1(data):
     H = np.array([0,0])
     T = np.array([0,0])
     visited = []
-    for commmand in data:
-        direction, number = commmand
+    for command in data:
+        direction, number = command
         for _ in range(number):
             H = move_head(H, direction)
             T = move_tail(H, T)
@@ -45,8 +45,8 @@ def part1(data):
 def part2(data):
     snake = np.zeros((10,2), dtype=int)
     visited = []
-    for commmand in data:
-        direction, number = commmand
+    for command in data:
+        direction, number = command
         for _ in range(number):
             snake[0] = move_head(snake[0], direction)
             for i in range(1,len(snake)):
