@@ -2,25 +2,14 @@ import numpy as np
 from collections import Counter
 
 def parse_text(input_txt):
-    data = []
-    with open(input_txt, "r") as f:
-        for line in f.read().split('\n'):
-            data.append([int(d) for d in line.split(" ") if d])
-    
-    data_array = np.array(data)
+    data_array = np.loadtxt(input_txt, dtype=int)
     return data_array
 
-
 def part1(data):
-    new_data = []
-    for column in data.T:
-        sorted_column = np.sort(column)
-        new_data.append(sorted_column)
-    sorted_data = np.array(new_data).T
-    distances = np.abs(np.subtract(sorted_data[:,1], sorted_data[:,0]))
+    sorted_data = np.sort(data, axis=0)
+    distances = np.abs(np.diff(sorted_data, axis=1))
     total_distance = np.sum(distances)
     return total_distance
-
 
 def part2(data):
     similarity_scores = Counter(data[:,1])
