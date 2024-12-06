@@ -3,6 +3,7 @@ import numpy as np
 GUARD = "^"
 OBSTACLE = "#"
 VISITED = "X"
+TURN = "O"
 
 
 def parse_text(input_txt):
@@ -22,17 +23,6 @@ def find_symbol(slice: np.ndarray, symbol: str):
 
 def turn_right(direction: np.ndarray):
     return np.array([direction[1], -direction[0]])
-
-
-def direction_to_letter(direction: np.ndarray):
-    if np.all(direction == np.array([0, 1])):
-        return "R"
-    if np.all(direction == np.array([0, -1])):
-        return "L"
-    if np.all(direction == np.array([1, 0])):
-        return "D"
-    if np.all(direction == np.array([-1, 0])):
-        return "U"
 
 
 def get_slice_parameters(coordinate: int, direction: int, include_start: bool = False):
@@ -73,49 +63,38 @@ def get_slice_with_path(coordinate: np.ndarray, path: np.ndarray):
         slices.append(slice(start, stop, step))
     return tuple(slices)
 
+class InfiniteLoopError(Exception):
+    pass
+
+def do_the_guard_thing(data):
+    guard_map = data.copy()
+    within_bounds, guard = find_symbol(guard_map, GUARD)
+    turns = np.full_like(guard_map, False, dtype=bool)
+    direction = np.array([-1, 0])
+    while within_bounds:
+        if turns[tuple(guard)] and np.any(path != np.array([0, 0])):
+            raise InfiniteLoopError("Infinite loop detected")
+        turns[tuple(guard)] = True
+        within_bounds, path = get_path(guard, direction, guard_map)
+        guard_map[get_slice_with_path(guard, path)] = VISITED
+        guard += path
+        direction = turn_right(direction)
+    return guard_map
 
 def part1(data):
-    guard_map = data.copy()
-    within_bounds, guard = find_symbol(guard_map, GUARD)
-    direction = np.array([-1, 0])
-    while within_bounds:
-        within_bounds, path = get_path(guard, direction, guard_map)
-        guard_map[get_slice_with_path(guard, path)] = VISITED
-        guard += path
-        direction = turn_right(direction)
+    guard_map = do_the_guard_thing(data)
     return np.count_nonzero(guard_map == VISITED)
 
-def find_infinite_loop(guard: np.ndarray, original_path: np.ndarray, direction: np.ndarray, guard_map: np.ndarray):
-    options = 0
-    possible_guard = guard.copy()
-    possible_direction = turn_right(direction)
-    next_turn = direction_to_letter(turn_right(possible_direction))
-    while np.any(possible_guard != (guard + original_path)):
-        possible_guard += direction
-        possible_slice = guard_map[get_slice(possible_guard, possible_direction)]
-        x = "".join(list(possible_slice.flatten()))
-        if f"{next_turn}{OBSTACLE}" in x:
-            options += 1
-    return options
-
 def part2(data):
-    guard_map = data.copy()
-    within_bounds, guard = find_symbol(guard_map, GUARD)
-    direction = np.array([-1, 0])
+    guard_map = do_the_guard_thing(data)
     total = 0
-    while within_bounds:
-        within_bounds, path = get_path(guard, direction, guard_map)
-        guard_map[get_slice_with_path(guard, path)] = VISITED
-        guard_map[guard[0], guard[1]] = direction_to_letter(direction)
-
-        total += find_infinite_loop(guard, path, direction, guard_map)
-
-        guard += path
-        direction = turn_right(direction)
-
-    with open("guard_map.txt", "w") as file:
-        for line in guard_map:
-            file.write("".join(line) + "\n")
+    for i, j in zip(*np.where(guard_map == VISITED)):
+        new_map = data.copy()
+        new_map[i, j] = OBSTACLE
+        try:
+            part1(new_map)
+        except InfiniteLoopError:
+            total += 1
     return total
 
 
