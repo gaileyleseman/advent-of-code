@@ -10,23 +10,23 @@ def solve(data, n_connections):
     distances = {pair: get_distance(pair) for pair in pairs}
     distances_sorted = sorted(distances.items(), key=lambda x: x[1])
     circuits = []
-    for i in range(n_connections):
+    for i in range(len(distances_sorted)):
         p1, p2 = distances_sorted[i][0]
         connection = set([p1, p2])
-        prev = None
-        for k, c in enumerate(circuits):
-            if connection.intersection(c):
-                if prev:
-                    circuits[prev] = circuits[prev].union(circuits.pop(k))
-                    continue
-                circuits[k] = c.union(connection)
-                prev = k
-        if not prev:
-            circuits.append(connection)
-    frozen = set(map(frozenset, circuits))  # some bug where there are duplicate circuits that are not merged
-    print((len(circuits), len(frozen)))
-    circuit_sizes = sorted([len(c) for c in frozen], reverse=True)
-    print(f"part1 = {math.prod(circuit_sizes[:3])}")
+        old_circuits = circuits
+        circuits = []
+        for c in old_circuits:
+            if not connection.intersection(c):
+                circuits.append(c) # TODO: bug in this logic for example pt.1
+                continue
+            connection = connection.union(c)
+        circuits.append(connection)
+        circuit_sizes = sorted([len(c) for c in circuits], reverse=True)
+        if i == n_connections:
+            print(f"part1 = {math.prod(circuit_sizes[:3])}")
+        if circuit_sizes[0] >= len(data):
+            print(f"part2 = {p1[0] * p2[0]}")
+            return
         
 def get_distance(pair):
     x1, y1, z1 = pair[0]
