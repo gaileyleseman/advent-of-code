@@ -17,12 +17,12 @@ def solve(data, n_connections):
         circuits = []
         for c in old_circuits:
             if not connection.intersection(c):
-                circuits.append(c) # TODO: bug in this logic for example pt.1
+                circuits.append(c)
                 continue
             connection = connection.union(c)
         circuits.append(connection)
         circuit_sizes = sorted([len(c) for c in circuits], reverse=True)
-        if i == n_connections:
+        if i == (n_connections-1):
             print(f"part1 = {math.prod(circuit_sizes[:3])}")
         if circuit_sizes[0] >= len(data):
             print(f"part2 = {p1[0] * p2[0]}")
