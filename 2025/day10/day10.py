@@ -8,37 +8,32 @@ import numpy as np
 
 import itertools
 
-# Source - https://stackoverflow.com/a
-# Posted by Martijn Pieters, modified by community. See post 'Timeline' for change history
-# Retrieved 2025-12-10, License - CC BY-SA 4.0
-
 
 def parse_text(input_txt):
     with open(input_txt, "r") as f:
         raw_data = [line.split(" ") for line in f.read().split("\n")]
     data = []
+    lights_map = lambda c: (-1 if c == "#" else 1) #noqa
     for line in raw_data:
-        indicator_lights = np.array(
-            list(map(lambda c: (1 if c == "#" else -1), line.pop(0)[1:-1])), dtype=int
-        )
-        joltage_levels = np.array(
-            list(map(int, line.pop(-1)[1:-1].split(","))), dtype=int
-        )
+        indicators = np.array(list(map(lights_map, line.pop(0)[1:-1])), dtype=int)
+        joltages = np.array(list(line.pop(-1)[1:-1].split(",")), dtype=int)
         buttons = [list(map(int, b[1:-1].split(","))) for b in line]
-        data.append((indicator_lights, buttons, joltage_levels))
+        data.append((indicators, buttons, joltages))
     return data
 
 
 def solve_pt1(data):
     answer = 0
     for goal, buttons, _ in data:
-        counter = np.inf
         button_matrix = get_button_matrix(goal, buttons) * -1 | 1
-        for presses in itertools.product([0, 1], repeat=len(buttons)):
+        possible_presses = sorted(
+            itertools.product([0, 1], repeat=len(buttons)), key=lambda x: (sum(x), x)
+        )
+        for presses in possible_presses:
             result = np.prod(button_matrix ** np.array(presses), axis=1)
-            if (result == goal * -1).all():
-                counter = min(sum(presses), counter)
-        answer += counter
+            if (result == goal).all():
+                answer += sum(presses)
+                break
     print(f"part1 = {answer}")
 
 
