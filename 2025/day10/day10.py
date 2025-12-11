@@ -2,9 +2,11 @@
 # requires-python = ">=3.13"
 # dependencies = [
 #     "numpy",
+#     "scipy",
 # ]
 # ///
 import numpy as np
+import scipy as sp
 
 import itertools
 
@@ -40,16 +42,13 @@ def solve_pt1(data):
 def solve_pt2(data):
     answer = 0
     for _, buttons, goal in data:
-        counter = np.inf
         button_matrix = get_button_matrix(goal, buttons) * 1
-        for presses in itertools.product(range(max(goal + 1)), repeat=len(buttons)):
-            result = np.dot(button_matrix, np.array(presses))
-            if (result > goal).any():
-                continue
-            if (result == goal).all():
-                counter = min(sum(presses), counter)
-        answer += counter
-        print(f"\t{counter=}")
+        c = np.ones(len(buttons)) # we are going to minimize c.T*x (such that Ax = b)
+        optimization = sp.optimize.linprog(
+            c=c, A_eq = button_matrix, b_eq = goal, integrality=1
+
+        )
+        answer += optimization.fun
     print(f"part2 = {answer}")
 
 
