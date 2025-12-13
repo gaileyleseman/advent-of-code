@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 def parse_text(input_txt):
     data = {}
     with open(input_txt, "r") as f:
@@ -10,11 +8,12 @@ def parse_text(input_txt):
 
 
 def solve_pt1(data):
-    cache = {"out": 1}
-    print(f"part1 = {find_num_paths_to_node('you', 'out', data, cache)}")
+    print(f"part1 = {find_num_paths_to_node('you', 'out', data)}")
 
 
-def find_num_paths_to_node(start_node, end_node, graph, cache):
+def find_num_paths_to_node(start_node, end_node, graph, cache=None):
+    if cache is None:
+        cache = {end_node: 1}
     if start_node in cache:
         return cache[start_node]
     ans = 0
@@ -25,34 +24,26 @@ def find_num_paths_to_node(start_node, end_node, graph, cache):
 
 
 def solve_pt2(data):
-    print(len(data))
-    cache = {"out": 1}
     data["out"] = []
-    print(data["out"])
-    print(f"ref = {find_num_paths_to_node('svr', 'dac', data, cache)}")
-    paths = find_paths_to_node("svr", "dac", data)
-    print(len(paths))
-
-
-def find_paths_to_node(start, end, graph):
-    paths = []
-    stack = [(start, [start])]  # (node, path)
-    while stack:
-        u, p = stack.pop()
-        if u == end:
-            paths.append((p))
-            continue
-        for v in graph[u]:
-            if v not in p:  # avoid cycles
-                stack.append((v, p + [v]))
-    return paths
+    print(f"ref = {find_num_paths_to_node('svr', 'out', data)}")
+    combos = [
+        [["svr", "dac"],["dac", "fft"],["fft", "out"]],
+        [["svr", "fft"], ["fft", "dac"], ["dac", "out"]],
+    ]
+    answer = 0
+    for combo_set in combos:
+        set_answer = 1
+        for combo in combo_set:
+            set_answer *= find_num_paths_to_node(combo[0], combo[1], data)
+        answer += set_answer
+    print(f"part2 = {answer}")
 
 
 if __name__ == "__main__":
     print("TEST")
-    # solve_pt1(parse_text("test1.txt"))
-    # solve_pt2(parse_text("test2.txt"))
+    solve_pt1(parse_text("test1.txt"))
+    solve_pt2(parse_text("test2.txt"))
 
     print("INPUT")
-    # solve_pt1(parse_text("input.txt"))
+    solve_pt1(parse_text("input.txt"))
     solve_pt2(parse_text("input.txt"))
